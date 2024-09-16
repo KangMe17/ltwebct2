@@ -24,19 +24,22 @@ public class LoginController extends HttpServlet {
 			resp.sendRedirect(req.getContextPath() + "/waiting");
 			return;
 		}
-		// Check cookie
-		Cookie[] cookies = req.getCookies();
-		if (cookies != null) {
-			for (Cookie cookie : cookies) {
-				if (cookie.getName().equals("username")) {
-					session = req.getSession(true);
-					session.setAttribute("username", cookie.getValue());
-					resp.sendRedirect(req.getContextPath() + "/waiting");
-					return;
-				}
-			}
-		}
-		req.getRequestDispatcher("views/login.jsp").forward(req, resp);
+		 // Check cookie
+	    Cookie[] cookies = req.getCookies();
+	    if (cookies != null) {
+	        for (Cookie cookie : cookies) {
+	            if (cookie.getName().equals("username")) {
+	                if (session == null) {
+	                    session = req.getSession(true);
+	                }
+	                session.setAttribute("username", cookie.getValue());
+	                resp.sendRedirect(req.getContextPath() + "/waiting");
+	                return;
+	            }
+	        }
+	    }
+	    
+	    req.getRequestDispatcher("views/login.jsp").forward(req, resp);
 	}
 
 	@Override
@@ -77,7 +80,8 @@ public class LoginController extends HttpServlet {
 
 	private void saveRemeberMe(HttpServletResponse response, String username) {
 	    Cookie cookie = new Cookie(COOKIE_REMEMBER, username);
-	    cookie.setMaxAge(30 * 60);
+	    cookie.setMaxAge(30 * 60); // Cookie is valid for 30 minutes
+	    cookie.setPath("/"); // Ensure cookie is available site-wide
 	    response.addCookie(cookie);
 	}
 
