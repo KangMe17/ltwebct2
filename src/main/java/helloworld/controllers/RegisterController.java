@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @SuppressWarnings("serial")
-@WebServlet(urlPatterns = "/register")
+@WebServlet(urlPatterns = {"/register"})
 public class RegisterController extends HttpServlet {
 
 	@Override
@@ -44,41 +44,59 @@ public class RegisterController extends HttpServlet {
 	@SuppressWarnings("static-access")
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		resp.setCharacterEncoding("UTF-8");
-		req.setCharacterEncoding("UTF-8");
-		String username = req.getParameter("username");
-		String password = req.getParameter("password");
-		String email = req.getParameter("email");
-		String fullname = req.getParameter("fullname");
-		String phone = req.getParameter("phone");
-		IUserService service = new UserServiceImpl();
-		String alertMsg = "";
+	    // Thiết lập mã hóa ký tự cho request và response để tránh lỗi ký tự
+	    resp.setCharacterEncoding("UTF-8");
+	    req.setCharacterEncoding("UTF-8");
 
-		if (service.checkExistEmail(email)) {
-			alertMsg = "Email đã tồn tại!";
-			req.setAttribute("alert", alertMsg);
-			req.getRequestDispatcher(Constant.Path.REGISTER).forward(req, resp);
-			return;
-		}
-		if (service.checkExistUsername(username)) {
-			alertMsg = "Tài khoản đã tồn tại!";
-			req.setAttribute("alert", alertMsg);
-			req.getRequestDispatcher(Constant.Path.REGISTER).forward(req, resp);
-			return;
-		}
+	    // Lấy thông tin từ form đăng ký
+	    String username = req.getParameter("username");
+	    String password = req.getParameter("password");
+	    String email = req.getParameter("email");
+	    String fullname = req.getParameter("fullname");
+	    String phone = req.getParameter("phone");
+	    
+	    // Khởi tạo service để xử lý logic người dùng
+	    IUserService service = new UserServiceImpl();
+	    
+	    // Biến để lưu thông báo
+	    String alertMsg = "";
 
-		boolean isSuccess = service.register(username, password, email, fullname, phone);
-		if (isSuccess) {
-			// SendMail sm = new SendMail();
-			// sm.sendMail(email, "Shopping.iotstar.vn", "Welcome to Shopping. Please Login
-			// to useservice. Thanks !");
-			req.setAttribute("alert", alertMsg);
-			resp.sendRedirect(req.getContextPath() + "/login");
-		} else {
-			alertMsg = "System error!";
-			req.setAttribute("alert", alertMsg);
-			req.getRequestDispatcher(Constant.Path.REGISTER).forward(req, resp);
-		}
+	    // Kiểm tra xem email đã tồn tại chưa
+	    if (service.checkExistEmail(email)) {
+	        alertMsg = "Email đã tồn tại!";
+	        req.setAttribute("alert", alertMsg);
+	        // Trả về trang đăng ký với thông báo lỗi
+	        req.getRequestDispatcher(Constant.Path.REGISTER).forward(req, resp);
+	        return;
+	    }
 
+	    // Kiểm tra xem tên đăng nhập đã tồn tại chưa
+	    if (service.checkExistUsername(username)) {
+	        alertMsg = "Tài khoản đã tồn tại!";
+	        req.setAttribute("alert", alertMsg);
+	        // Trả về trang đăng ký với thông báo lỗi
+	        req.getRequestDispatcher(Constant.Path.REGISTER).forward(req, resp);
+	        return;
+	    }
+
+	    // Nếu các điều kiện hợp lệ, tiến hành đăng ký người dùng
+	    boolean isSuccess = service.register(username, password, email, fullname, phone);
+
+	    // Nếu đăng ký thành công, chuyển hướng sang trang đăng nhập
+	    if (isSuccess) {
+	        // Gửi email chào mừng nếu cần thiết
+	        // SendMail sm = new SendMail();
+	        // sm.sendMail(email, "Shopping.iotstar.vn", "Welcome to Shopping. Please Login to use the service. Thanks!");
+
+	        // Chuyển hướng người dùng đến trang đăng nhập
+	        resp.sendRedirect(req.getContextPath() + "/login");
+	    } else {
+	        // Nếu có lỗi hệ thống, hiển thị thông báo lỗi
+	        alertMsg = "Lỗi hệ thống, vui lòng thử lại!";
+	        req.setAttribute("alert", alertMsg);
+	        // Trả về trang đăng ký với thông báo lỗi
+	        req.getRequestDispatcher(Constant.Path.REGISTER).forward(req, resp);
+	    }
 	}
+
 }

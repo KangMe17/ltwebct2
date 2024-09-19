@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-	trang cua admin
+	<h1> Trang Chu </h1>
 </body>
 </html>

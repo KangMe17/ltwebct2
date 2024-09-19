@@ -42,22 +42,21 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	@Override
-	public void insert(UserModel user) {
-		userDao.insert(user);
+	public boolean register(String username, String password, String email, String fullname, String phone) {
+	    // Kiểm tra xem tài khoản hoặc email đã tồn tại chưa
+	    if (userDao.checkExistUsername(username) || userDao.checkExistEmail(email)) {
+	        return false;
+	    }
 
-	}
+	    // Lấy thời gian hiện tại để lưu vào cột created_at
+	    long millis = System.currentTimeMillis();
+	    java.sql.Date date = new java.sql.Date(millis);
 
-	@Override
-	public boolean register(String email, String password, String username, String
-			fullname, String phone) {
-		if (userDao.checkExistUsername(username)) {
-			return false;
-		}
-		long millis = System.currentTimeMillis();
-		java.sql.Date date = new java.sql.Date(millis);
-		userDao.insert(new UserModel(username, email, password, fullname, null, 5, phone, date));
-		return true;
-
+	    // Thêm người dùng mới vào cơ sở dữ liệu
+	    UserModel newUser = new UserModel(username, email, password, fullname, null, 5, phone, date);
+	    userDao.insert(newUser);
+	    
+	    return true;
 	}
 
 	@Override
@@ -75,6 +74,12 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public boolean checkExistPhone(String phone) {
 		return userDao.checkExistPhone(phone);
+
+	}
+	
+	@Override
+	public void insert(UserModel user) {
+		userDao.insert(user);
 
 	}
 

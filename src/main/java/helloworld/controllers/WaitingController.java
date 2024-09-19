@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @SuppressWarnings("serial")
-@WebServlet(urlPatterns = "/waiting")
+@WebServlet(urlPatterns = {"/waiting"})
 public class WaitingController extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
