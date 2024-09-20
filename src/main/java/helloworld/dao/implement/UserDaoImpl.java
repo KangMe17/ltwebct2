@@ -131,4 +131,21 @@ public class UserDaoImpl implements IUserDao {
 		return false;
 	}
 
+
+	@Override
+	public boolean updatePasswordByEmail(String email, String newPassword) {
+	    String sql = "UPDATE users SET password = ? WHERE email = ?";
+	    try (Connection conn = new DBConnectMySQL().getDatabaseConnection();
+	         PreparedStatement ps = conn.prepareStatement(sql)) {
+	         
+	        ps.setString(1, newPassword);
+	        ps.setString(2, email);
+	        int rowsUpdated = ps.executeUpdate();
+	        return rowsUpdated > 0; // Return true if password updated successfully
+	    } catch (SQLException | ClassNotFoundException e) {
+	        e.printStackTrace();
+	    }
+	    return false;
+	}
+
 }
