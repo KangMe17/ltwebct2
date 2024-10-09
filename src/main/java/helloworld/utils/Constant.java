@@ -5,4 +5,6 @@ public class Constant {
 		public static final String REGISTER = "/views/register.jsp"; // The path to the register page
 		// Add other paths as necessary
 	}
+
+	public static final String DIR = "D:\\upload";
 }

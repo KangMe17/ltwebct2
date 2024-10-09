@@ -10,32 +10,24 @@ import jakarta.servlet.http.HttpSession;
 import helloworld.models.UserModel;
 
 @SuppressWarnings("serial")
-@WebServlet(urlPatterns = {"/admin/home"})
+@WebServlet(urlPatterns = {"/home"})
 public class HomeController extends HttpServlet {
 
-    @Override
+	@Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession();
-        UserModel user = (UserModel) session.getAttribute("account");
-
-        if (user == null) {
-            // If no user is logged in, redirect to the login page
-            resp.sendRedirect(req.getContextPath() + "/login");
-            return;
+        // Get the current session, but don't create a new one if it doesn't exist
+        HttpSession session = req.getSession(false);
+        
+        UserModel user = null;
+        if (session != null) {
+            user = (UserModel) session.getAttribute("account");
         }
 
-        // Check the user's role to determine if they should be on the admin page
-        if ("/admin/home".equals(req.getServletPath())) {
-            if (user.getRoleid() == 1) {
-                // Render admin dashboard
-                req.getRequestDispatcher("/views/home.jsp").forward(req, resp);
-            } else {
-                // Unauthorized access to admin page
-                resp.sendRedirect(req.getContextPath() + "/home");
-            }
-        } else {
-            // Render general home page for users
-            req.getRequestDispatcher("/views/home.jsp").forward(req, resp);
+        if (user != null) {
+            // If the user is logged in, display a personalized homepage
+            req.setAttribute("user", user);
         }
+        // Forward to the homepage view (accessible by both logged-in and non-logged-in users)
+        req.getRequestDispatcher("/views/home.jsp").forward(req, resp);
     }
 }

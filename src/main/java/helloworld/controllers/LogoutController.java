@@ -17,10 +17,10 @@ public class LogoutController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession(false); // Avoid creating a new session if it doesn't exist
-        if (session != null) {
-            session.invalidate(); // Invalidate the session
-        }
-        resp.sendRedirect(req.getContextPath() + "/login"); // Redirect to login page
+        
+        HttpSession session = req.getSession();
+        session.removeAttribute("account");
+        resp.sendRedirect("home");
+        
     }
 }

@@ -24,16 +24,18 @@ public class WaitingController extends HttpServlet {
 	        req.setAttribute("username", u.getUsername());
 	        
 	        // Check roles and avoid redirect loops
-	        if (u.getRoleid() == 1) {
+	        String currentURI = req.getRequestURI();
+	        if (u.getRoleid() == 1 && !currentURI.contains("/admin/home")) {
 	            resp.sendRedirect(req.getContextPath() + "/admin/home");
-	        } else if (u.getRoleid() == 2) {
+	        } else if (u.getRoleid() == 2 && !currentURI.contains("/manager/home")) {
 	            resp.sendRedirect(req.getContextPath() + "/manager/home");
-	        } else {
+	        } else if (u.getRoleid() == 3 && !currentURI.contains("/home")) {
 	            resp.sendRedirect(req.getContextPath() + "/home");
-	        }
+	        } 
 	    } else {
 	        resp.sendRedirect(req.getContextPath() + "/login");
 	    }
+
 	}
 
 }

@@ -53,7 +53,7 @@ public class UserServiceImpl implements IUserService {
 	    java.sql.Date date = new java.sql.Date(millis);
 
 	    // Thêm người dùng mới vào cơ sở dữ liệu
-	    UserModel newUser = new UserModel(username, email, password, fullname, null, 5, phone, date);
+	    UserModel newUser = new UserModel(username, email, password, fullname, null, 3, phone, date);
 	    userDao.insert(newUser);
 	    
 	    return true;

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://jakarta.ee/xml/ns/jakartaee" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd" version="6.0">
-  <servlet>
-    <description></description>
-    <display-name>HelloWorldController</display-name>
-    <servlet-name>HelloWorldController</servlet-name>
-    <servlet-class>helloworld.controllers.HelloWorldController</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>HelloWorldController</servlet-name>
-    <url-pattern>/HelloWorldController</url-pattern>
-  </servlet-mapping>
+  
+  <filter>
+    <filter-name>sitemesh</filter-name>
+    <filter-class>org.sitemesh.config.ConfigurableSiteMeshFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>sitemesh</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
   <display-name>helloworld</display-name>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
@@ -19,4 +19,8 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  <session-config>
+  	<tracking-mode>COOKIE</tracking-mode>
+  </session-config>
+  
 </web-app>
